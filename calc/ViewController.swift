@@ -10,17 +10,28 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var userIsInTheMiddleOfTyping: Bool = false
+    //Interface Components
     @IBOutlet weak var display: UILabel!
+
+    //Variables
+    var userIsInTheMiddleOfTyping: Bool = false
+    var displayValue: Double {
+        get{
+            return Double(display.text!)!
+        }
+        set{
+            display.text = String(newValue)
+        }
+    }
 
     @IBAction func touchDigit(_ sender: UIButton) {
         let digit = sender.currentTitle!
         //print("\(digit) was used")
         if userIsInTheMiddleOfTyping {
-            let currentDisplay = display!.text
-            display?.text = currentDisplay! + digit
+            let currentDisplay = display.text
+            display.text = currentDisplay! + digit
         }else{
-            display!.text = digit
+            display.text = digit
             userIsInTheMiddleOfTyping = true
         }
     }
@@ -29,10 +40,10 @@ class ViewController: UIViewController {
         if let mathematicalSymbol = sender.currentTitle {
             switch  mathematicalSymbol {
             case "π":
-                display!.text = String(Double.pi)
+                displayValue = Double.pi
             case "√":
-                let operand = Double(display!.text!)
-                display!.text = String(sqrt(operand!))
+                let operand = displayValue
+                displayValue = sqrt(operand)
             default:
                 break
             }
