@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var display: UILabel!
 
     //Variables
+    private var brain = calculatorBrain()
     var userIsInTheMiddleOfTyping: Bool = false
     var displayValue: Double {
         get{
@@ -23,10 +24,9 @@ class ViewController: UIViewController {
             display.text = String(newValue)
         }
     }
-
+    
     @IBAction func touchDigit(_ sender: UIButton) {
         let digit = sender.currentTitle!
-        //print("\(digit) was used")
         if userIsInTheMiddleOfTyping {
             let currentDisplay = display.text
             display.text = currentDisplay! + digit
@@ -37,18 +37,16 @@ class ViewController: UIViewController {
     }
     
     @IBAction func performOperation(_ sender: UIButton) {
-        if let mathematicalSymbol = sender.currentTitle {
-            switch  mathematicalSymbol {
-            case "π":
-                displayValue = Double.pi
-            case "√":
-                let operand = displayValue
-                displayValue = sqrt(operand)
-            default:
-                break
-            }
+        if userIsInTheMiddleOfTyping {
+            brain.setOperand(displayValue)
+            userIsInTheMiddleOfTyping = false
         }
-        userIsInTheMiddleOfTyping = false
+        if let mathematicalSymbol = sender.currentTitle {
+            brain.performOperation(mathematicalSymbol)
+        }
+        if let result = brain.result {
+            displayValue = result
+        }
     }
     
 }
